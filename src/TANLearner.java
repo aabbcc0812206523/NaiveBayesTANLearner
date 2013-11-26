@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import javax.rmi.CORBA.Util;
-
 public class TANLearner extends Learner
 {
 
@@ -12,7 +10,7 @@ public class TANLearner extends Learner
 	}
 	
 	/**
-	 * Main method for TAN Learner
+	 * Main method for TAN Learner to learn the Bayes Net Structure.
 	 */
 	public void learnBayesNetStructure()
 	{
@@ -26,18 +24,20 @@ public class TANLearner extends Learner
 		prepareComplexModelParams();
 		printComplexModelParams();
 		
-		// Learn BayesNet Structure
+		// Learn BayesNet Structure -- Taking the first attribute as the root, assign directions
+		// in the tree, as well as make Y as parent of all the nodes in the graph.
 		getBayesNetStructure();
 		printBayesNetStructure();
 		
-		// Taking the first attribute as the root, assign directions
-		// in the tree, as well as make Y as parent of all the nodes in
-		// the graph.
+		// Calculate CPT Tables for each node in the learned Bayes Net
 		for (int i = 0; i < mNumSoleFeatures; i++)
 			mCPTable.add(calculateCPTForFeature(i));
 		
 	}
 	
+	/**
+	 * Method to initialize Complex Model Parameters Matrix.
+	 */
 	public void initComplexModelParams()
 	{
 		mComplexModelParams = new Integer[mNumSoleFeatures][mNumSoleFeatures][][][];
@@ -62,6 +62,9 @@ public class TANLearner extends Learner
 		}
 	}
 	
+	/**
+	 * Method to prepare Complex Model Parameters Matrix.
+	 */
 	public void prepareComplexModelParams()
 	{
 		String classFirstValue = mTrainSet.getOutputFeature().getValues().get(0);
@@ -91,6 +94,9 @@ public class TANLearner extends Learner
 		}
 	}
 	
+	/**
+	 * Method to print Complex Model Parameter values.
+	 */
 	public void printComplexModelParams()
 	{
 		if(!Utility.IS_VERBOSE) return;
@@ -117,6 +123,10 @@ public class TANLearner extends Learner
 		}
 	}
 	
+	/**
+	 * Method to get Bayes Net Structure by first calculating Weighted Graph and then
+	 * getting Maximim Spanning Tree from it using Prim's Algorithm.
+	 */
 	public void getBayesNetStructure()
 	{
 		// Prepare complete graph between different features
@@ -127,6 +137,10 @@ public class TANLearner extends Learner
 		getMST();
 	}
 	
+	/**
+	 * Method to calculate weight of the graph edges, which will be 
+	 * then used to find the structure of Bayes Net.
+	 */
 	public void calculateGraphEdges()
 	{
 		mWeightedGraph = new Double[mNumSoleFeatures][mNumSoleFeatures];
@@ -182,6 +196,9 @@ public class TANLearner extends Learner
 		}
 	}
 	
+	/**
+	 * Method to print the Weighted Graph.
+	 */
 	void printWeightedGraph()
 	{
 		if(!Utility.IS_VERBOSE) return;
@@ -201,26 +218,34 @@ public class TANLearner extends Learner
 		}
 	}
 	
+	/**
+	 * Method to get Maximum Spanning Tree from the Weighted Graph using Prim's Algorithm.
+	 * @return	Maximum Spanning Tree
+	 */
 	Integer[] getMST() { return getMST(mWeightedGraph); }
 	Integer[] getMST(Double[][] graph)
 	{
 		HashSet<Integer> visitedSet = new HashSet<Integer>();
 		mBayesNetStructure = new Integer[mNumSoleFeatures];
 		
+		// Pushing first feature in the Visited Node set.
 		visitedSet.add(0);
 		int numVisited = 1;
 		mBayesNetStructure[0] = -1;	// Having no parent, hence, this will be the root of the tree.
 		for (int i = 0; i < mNumSoleFeatures; i++)
 			mWeightedGraph[i][0] = -1.0;
 		
+		// Iterate until every node is visited.
 		while(numVisited < mNumSoleFeatures)
 		{
 			Double tempMax = -1.0;
 			int sourceEdge = -1;
 			int destEdge = -1;
 			
+			// Only considering so far visited nodes
 			for (Integer i : visitedSet) 
 			{
+				// Finding max-weighted edge for this feature
 			    for(int j = 0; j < mNumSoleFeatures; j++)
 			    {
 			    	if(mWeightedGraph[i][j].compareTo(-1.0) == 0) continue;
@@ -262,6 +287,9 @@ public class TANLearner extends Learner
 		return mBayesNetStructure;
 	}
 	
+	/**
+	 * Method to print Bayes Net.
+	 */
 	void printBayesNetStructure()
 	{
 		for (int i = 0; i < mBayesNetStructure.length; i++)
@@ -278,6 +306,11 @@ public class TANLearner extends Learner
 		System.out.println();
 	}
 	
+	/**
+	 * Method to calculate Conditional Probability Table for each feature in the Bayes Net.
+	 * @param i		Feature Index
+	 * @return		CP Table for this feature
+	 */
 	Double[][][] calculateCPTForFeature(int i)
 	{
 		if(Utility.IS_VERBOSE)
@@ -349,6 +382,12 @@ public class TANLearner extends Learner
 		return CPT;
 	}
 	
+	
+	/**
+	 * Method to test the Bayes Net Structure generated.
+	 * @param testSet	Test Data Set
+	 * @return			Test Set Accuracy
+	 */
 	Double testModel(DataSet testSet)
 	{
 		int correctPredictionCount = 0;
@@ -357,32 +396,29 @@ public class TANLearner extends Learner
 		// Run through the examples now.
 		for(Example e : testSet)
 		{
+			// Initialize the ratios to be calculated
 			Double[] ratio = new Double[2];
 			for(int y = 0; y < 2; y++)	// ASSUMING Output label is binary-valued.
-			{
 				ratio[y] = (double)(mOutputValueCount[y] + 1);	
-//				ratio[y] = Math.log10(mOutputValueCount[y] + 1);
-			}
 			
+			// Go through all the feature values of the example
 			for(int i = 0; i < mBayesNetStructure.length; i++)
 			{
-				int parent = mBayesNetStructure[i];
-				
+				// Since we have already calculated CPT Tables for each features, 
+				// let's use those to calculate the probability ratio.
 				Double[][][] CPT = mCPTable.get(i);
 				
-				if(parent == -1)
+				DiscreteFeature f = (DiscreteFeature) mFeatures.get(i);
+				int featureValueIndex =  f.valueIndexMap.get(e.get(i));	// Locate the feature value
+				
+				int parent = mBayesNetStructure[i];
+				if(parent == -1)	// If node in the structure has 'class' as only parent.
 				{
-					DiscreteFeature f = (DiscreteFeature) mFeatures.get(i);
-					int featureValueIndex =  f.valueIndexMap.get(e.get(i));	// Locate the feature value
-					
 					for(int y = 0; y < 2; y++)
 						ratio[y] *= CPT[0][featureValueIndex][y];
 				}
 				else
 				{
-					DiscreteFeature f = (DiscreteFeature) mFeatures.get(i);
-					int featureValueIndex =  f.valueIndexMap.get(e.get(i));
-					
 					DiscreteFeature parentFeature = ((DiscreteFeature) mFeatures.get(parent));
 					int parentFeatureValueIndex = parentFeature.valueIndexMap.get(e.get(parent));
 					
@@ -390,7 +426,9 @@ public class TANLearner extends Learner
 						ratio[y] *= CPT[parentFeatureValueIndex][featureValueIndex][y];
 				}
 				
-				/* ALTERNATIVE WAY -- Calculations without using CPT Table
+				/*******************************************************************************************
+				//   ALTERNATIVE WAY -- Calculations without using CPT Table
+				//*******************************************************************************************
 				if(parent == -1)	// The only parent is the output class
 				{
 					// Look up in the BasicModelParams
@@ -410,13 +448,10 @@ public class TANLearner extends Learner
 					if(parent < i) { indexXi = parent; indexXj = i; }
 					int numFeatureValuesI = ((DiscreteFeature) mFeatures.get(i)).getNumValues();
 					
-					
 					DiscreteFeature featureXi = ((DiscreteFeature) mFeatures.get(indexXi));
 					DiscreteFeature featureXj = ((DiscreteFeature) mFeatures.get(indexXj));
 					int featureValueIndexXi = featureXi.valueIndexMap.get(e.get(indexXi));
-					int numFeatureValuesXi = featureXi.getNumValues();
 					int featureValueIndexXj = featureXj.valueIndexMap.get(e.get(indexXj));
-					int numFeatureValuesXj = featureXj.getNumValues();
 					
 					DiscreteFeature parentFeature = ((DiscreteFeature) mFeatures.get(parent));
 					int parentFeatureValueIndex = parentFeature.valueIndexMap.get(e.get(parent));	// Locate the feature value
@@ -425,14 +460,12 @@ public class TANLearner extends Learner
 					for(int y = 0; y < 2; y++)	// ASSUMING Output label is binary-valued.
 					{
 						double P_xi_xj_y = (double) (mComplexModelParams[indexXi][indexXj][featureValueIndexXi][featureValueIndexXj][y] + 1);
-
-						
-						double P_xj_y = (double) (parentFeatureArray.get(parentFeatureValueIndex)[y] + numFeatureValuesI);//*numFeatureValuesXj*2);
+						double P_xj_y = (double) (parentFeatureArray.get(parentFeatureValueIndex)[y] + numFeatureValuesI);
 						
 						ratio[y] *= P_xi_xj_y / P_xj_y;
 					}					
 				}
-				*/
+				//***********************************************************************************/
 				
 			}
 			
@@ -469,10 +502,19 @@ public class TANLearner extends Learner
 		return ((double)correctPredictionCount * 100/testSet.size());
 	}
 	
-	public Integer[][][][][] mComplexModelParams = null;	// [Feature#i][Feature#j][Feature-i-value][Feature-j-value][y-label]
+	/* Member Variables */
+	
+	// 5-D Array to hold the data from the training set. It helps in creating the weighted graph and also the CP tables.
+	// Description - [Feature#i][Feature#j][Feature-i-value][Feature-j-value][y-label]
+	public Integer[][][][][] mComplexModelParams = null;
+	
+	// Complete Graph with all the features as nodes, and having edge values as 
+	// Mutual Conditional Information between two features.
 	public Double[][] mWeightedGraph = null;
-	public Integer[] mBayesNetStructure = null;	// Mapping of node to its parent node
+	
+	// Bayes Net Structure -- Mapping of node to its parent node
+	public Integer[] mBayesNetStructure = null;
+	
+	// Conditional Probability Table for each node in the Bayes Net Structure
 	public ArrayList<Double[][][]> mCPTable = new ArrayList<Double[][][]>();
-	
-	
 }

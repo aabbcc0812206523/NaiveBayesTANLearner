@@ -35,7 +35,6 @@ public class NaiveBayes extends Learner
 		System.out.println();
 	}
 	
-	
 	/**
 	 * Method to test the accuracy of the model generated.
 	 * 
@@ -47,15 +46,12 @@ public class NaiveBayes extends Learner
 		int correctPredictionCount = 0;
 		
 		ArrayList<String> classValues = mTrainSet.getOutputFeature().getValues();
-//		double mExamplesWithSECONDLabelCount =  mTrainSet.size() - mExamplesWithFIRSTLabelCount;
 		
 		// Run through the examples now.
 		for(Example e : testSet)
 		{
 			Double numerator = (double)(mOutputValueCount[0] + 1);//(mExamplesWithFIRSTLabelCount + 1);
 			Double denominator = (double)(mOutputValueCount[1] + 1); //(mExamplesWithSECONDLabelCount + 1);
-//			Double numerator = Math.log10(mExamplesWithFIRSTLabelCount + 1);
-//			Double denominator = Math.log10(mExamplesWithSECONDLabelCount + 1);	// Total count - First Label Count
 			
 			for(int i = 0; i < mNumSoleFeatures; i++)
 			{
@@ -68,8 +64,6 @@ public class NaiveBayes extends Learner
 				
 				numerator  	*= ((double)(featureArray.get(featureValueIndex)[0] + 1)/(mOutputValueCount[0] + numFeatureValues)); //(mExamplesWithFIRSTLabelCount + numFeatureValues));
 				denominator *= ((double)(featureArray.get(featureValueIndex)[1] + 1)/(mOutputValueCount[1] + numFeatureValues));
-//				numerator += Math.log10(featureArray.get(featureValueIndex)[0] + 1) - Math.log10(mExamplesWithFIRSTLabelCount + numFeatureValues);
-//				denominator += Math.log10(featureArray.get(featureValueIndex)[1] + 1) - Math.log10(mExamplesWithSECONDLabelCount + numFeatureValues);
 			}
 			
 			// Predict
@@ -79,13 +73,11 @@ public class NaiveBayes extends Learner
 			{
 				predictedLabel = classValues.get(0);
 				posteriorProb = numerator / (numerator + denominator);
-//				posteriorProb = Math.pow(10, numerator) / (Math.pow(10, numerator) + Math.pow(10, denominator));
 			}
 			else
 			{
 				predictedLabel = classValues.get(1);
 				posteriorProb = denominator / (numerator + denominator);
-//				posteriorProb = Math.pow(10, denominator) / (Math.pow(10, numerator) + Math.pow(10, denominator));
 			}
 
 			String actualLabel =  e.get(mNumFeatures - 1);
