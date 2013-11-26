@@ -1,6 +1,12 @@
 import java.util.ArrayList;
 
-
+/**
+ * Class to represent Naive Bayes
+ * 
+ * @author Prakhar
+ * @date 11/22/2013
+ * @hw 3
+ */
 public class NaiveBayes extends Learner
 {
 	NaiveBayes(DataSet trainSet)
@@ -41,7 +47,7 @@ public class NaiveBayes extends Learner
 	 * @param testSet	Test data set
 	 * @return			Accuracy of the generated model over the given test set.
 	 */
-	public double testNaiveBayesModel(DataSet testSet)
+	public double testNaiveBayesModel(DataSet testSet, boolean prob1)
 	{
 		int correctPredictionCount = 0;
 		
@@ -66,7 +72,7 @@ public class NaiveBayes extends Learner
 				denominator *= ((double)(featureArray.get(featureValueIndex)[1] + 1)/(mOutputValueCount[1] + numFeatureValues));
 			}
 			
-			// Predict
+			// Predict the label of this test set example
 			String predictedLabel = "";
 			double posteriorProb = 0.0;
 			if(numerator.compareTo(denominator) > 0)	// Predicted Label = FirstLabel
@@ -83,7 +89,7 @@ public class NaiveBayes extends Learner
 			String actualLabel =  e.get(mNumFeatures - 1);
 			if(Utility.IS_VERBOSE)
 				System.out.println("e[" + e.getName() + "] :\t" + predictedLabel + "  " + actualLabel);
-			else
+			else if (prob1)
 				System.out.println(predictedLabel + "  " + actualLabel + " " + posteriorProb);
 			
 			if(predictedLabel.equals(actualLabel))
@@ -92,7 +98,7 @@ public class NaiveBayes extends Learner
 		
 		if(Utility.IS_VERBOSE)
 			System.out.println("\nNumber of Correct Predictions = " + correctPredictionCount);
-		else
+		else if (prob1)
 			System.out.println("\n" + correctPredictionCount);
 		
 		return ((double)correctPredictionCount * 100/testSet.size());

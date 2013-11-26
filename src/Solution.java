@@ -1,21 +1,20 @@
 /**
- * Main class which learns and perform classification.
+ * Main class which learns and perform classification using either Naive Bayes or TAN Learner.
  * 
  * @author Prakhar PAnwaria
  * @date 11/22/2013
  * @hw 3
  */
 
-
 /*
  * Solution.java
  * 
- * Program accept three command-line arguments as follows: dt-learn
- * <train-set-file> <test-set-file> m
+ * Program accept three command-line arguments as follows: bayes
+ * <train-set-file> <test-set-file> <n|t>
  * 
  * where, train-set-file = Training Set Filename,
- * 		  test-set-file = Test Set Filename,
- * 		  m = threshold value used as a stopping criteria
+ * 		  test-set-file = Testing Set Filename,
+ * 		  n or t = 'n' for Naive Bayes, 't' for TAN Learner
  */
 public class Solution
 {
@@ -50,9 +49,6 @@ public class Solution
 		}
 		
 		// Decide on the basis of "n|t" whether consider Naive Bayes on TAN.
-//		trainSet.DescribeDataset();
-//		testSet.DescribeDataset();
-		
 		boolean plotLearningCurve = false;
 		if(plotLearningCurve)
 		{
@@ -71,7 +67,7 @@ public class Solution
 				nb.printBasicModelParams();
 				
 				// Test the accuracy of the model
-				double testSetAccuracy = nb.testNaiveBayesModel(testSet);
+				double testSetAccuracy = nb.testNaiveBayesModel(testSet, true);
 				
 				if(Utility.IS_VERBOSE)
 					System.out.println("TestSetAccuracy = " + testSetAccuracy);
@@ -80,11 +76,14 @@ public class Solution
 			{ 
 				TANLearner tl = new TANLearner(trainSet);
 				
-				// Prepare model
+				// Learn Bayes Net Structure
 				tl.learnBayesNetStructure();
 				
+				// Print Bayes Net Structure
+				tl.printBayesNetStructure();
+				
 				// Test the accuracy of the model
-				double testSetAccuracy = tl.testModel(testSet);
+				double testSetAccuracy = tl.testBayesNetStructure(testSet, true);
 				
 				if(Utility.IS_VERBOSE)
 					System.out.println("TestSetAccuracy = " + testSetAccuracy);
@@ -92,11 +91,18 @@ public class Solution
 		}
 	}
 	
-	
+	/**
+	 * Method to get avg accuracy of the learned models on randomly generated training sets.
+	 * @param trainSet	Original Training Set
+	 * @param testSet	Given Test Set
+	 * @param learner	Learning Method ('n' for Naive Bayes, 't' for TAN Learner)
+	 */
 	private static void runPlotLearningCurve(DataSet trainSet, DataSet testSet, String learner)
 	{
 		int [] trainingSetSize = {25, 50, 100};
 		int numIterations = 4;
+		
+		System.out.println(learner.equals("n")? "Method: Naive Bayes\n" : "Method: TAN\n");
 		
 		for (int i = 0; i < trainingSetSize.length; i++)
 		{
@@ -109,23 +115,25 @@ public class Solution
 					NaiveBayes nb = new NaiveBayes(inputDataSet);
 					nb.prepareBasicModel();
 
-					// Test Model on Test Set
-					avgAccuracy += nb.testNaiveBayesModel(testSet);
-					
-					if(Utility.IS_VERBOSE)
-						System.out.println("Iteration[" + j + "] Avg. accuracy=" + avgAccuracy);
+					// Test the accuracy of the model on Test Set
+					avgAccuracy += nb.testNaiveBayesModel(testSet, false);
 				}
 				else
 				{
 					TANLearner tl = new TANLearner(inputDataSet);
-					
-					// Prepare model
 					tl.learnBayesNetStructure();
+					
+					// Test the accuracy of the model on Test Set
+					avgAccuracy += tl.testBayesNetStructure(testSet, false);
 				}
+				
+				if(Utility.IS_VERBOSE)
+					System.out.println("Iteration[" + j + "] Avg. accuracy=" + avgAccuracy);
 			}
 			
 			avgAccuracy /= numIterations;
-			System.out.println("For Training Set Size = " + trainingSetSize[i] + " : Avg Accuracy = " + avgAccuracy);			
+			System.out.println("For Training Set Size = " + trainingSetSize[i] + " : Avg Accuracy = " + avgAccuracy);
+			System.out.println();
 		}
 	}
 	

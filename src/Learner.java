@@ -1,9 +1,15 @@
 import java.util.ArrayList;
 
-
+/**
+ * Class to represent a general learner.
+ * 
+ * @author Prakhar
+ * @date 11/22/2013
+ * @hw 3
+ */
 public class Learner
 {
-	public DataSet mTrainSet = null;
+	/* Methods */
 
 	Learner(DataSet trainSet)
 	{
@@ -116,9 +122,9 @@ public class Learner
 	
 	// P(Y)
 	public Integer[] mOutputValueCount = null;
-//	public int mExamplesWithFIRSTLabelCount = 0;
 	
 	// Caching Training Set information
+	public DataSet mTrainSet = null;
 	public int mNumFeatures = 0;
 	public int mNumSoleFeatures = 0;
 	public ArrayList<Feature> mFeatures = null;

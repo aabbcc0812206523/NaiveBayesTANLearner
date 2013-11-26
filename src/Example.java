@@ -4,7 +4,8 @@ import java.util.ArrayList;
  * Class to represent an example from the data set.
  * 
  * @author Prakhar
- * @hw 1
+ * @date 11/22/2013
+ * @hw 3
  */
 
 public class Example extends ArrayList<String>

@@ -1,9 +1,15 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * Class to represent TAN Learner.
+ * 
+ * @author Prakhar
+ * @date 11/22/2013
+ * @hw 3
+ */
 public class TANLearner extends Learner
 {
-
 	public TANLearner(DataSet trainSet)
 	{
 		super(trainSet);
@@ -27,7 +33,6 @@ public class TANLearner extends Learner
 		// Learn BayesNet Structure -- Taking the first attribute as the root, assign directions
 		// in the tree, as well as make Y as parent of all the nodes in the graph.
 		getBayesNetStructure();
-		printBayesNetStructure();
 		
 		// Calculate CPT Tables for each node in the learned Bayes Net
 		for (int i = 0; i < mNumSoleFeatures; i++)
@@ -388,7 +393,7 @@ public class TANLearner extends Learner
 	 * @param testSet	Test Data Set
 	 * @return			Test Set Accuracy
 	 */
-	Double testModel(DataSet testSet)
+	Double testBayesNetStructure(DataSet testSet, boolean prob1)
 	{
 		int correctPredictionCount = 0;
 		ArrayList<String> classValues = mTrainSet.getOutputFeature().getValues();
@@ -428,7 +433,7 @@ public class TANLearner extends Learner
 				
 				/*******************************************************************************************
 				//   ALTERNATIVE WAY -- Calculations without using CPT Table
-				//*******************************************************************************************
+				//******************************************************************************************
 				if(parent == -1)	// The only parent is the output class
 				{
 					// Look up in the BasicModelParams
@@ -487,7 +492,7 @@ public class TANLearner extends Learner
 			String actualLabel =  e.get(mNumFeatures - 1);
 			if(Utility.IS_VERBOSE)
 				System.out.println("e[" + e.getName() + "] :\t" + predictedLabel + "  " + actualLabel);
-			else
+			else if (prob1)
 				System.out.println(predictedLabel + "  " + actualLabel + " " + posteriorProb);
 			
 			if(predictedLabel.equals(actualLabel))
@@ -496,7 +501,7 @@ public class TANLearner extends Learner
 		
 		if(Utility.IS_VERBOSE)
 			System.out.println("\nNumber of Correct Predictions = " + correctPredictionCount);
-		else
+		else if (prob1)
 			System.out.println("\n" + correctPredictionCount);
 		
 		return ((double)correctPredictionCount * 100/testSet.size());

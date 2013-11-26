@@ -8,7 +8,6 @@ import java.util.HashMap;
  * @date 11/22/2013
  * @hw 3
  */
-
 class DiscreteFeature extends Feature
 {
 	/* Member Variables */

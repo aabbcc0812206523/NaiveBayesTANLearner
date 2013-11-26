@@ -3,13 +3,16 @@
  * Class to represent a Numeric Feature.
  * 
  * @author Prakhar Panwaria
- * @date 10/05/2013
- * @hw 1
+ * @date 11/22/2013
+ * @hw 3
  */
-
 class NumericFeature extends Feature
 {
+	/* Member Variables */
+	
 	private Double mThreshold;	// Threshold Value on which we'll branch out in Decision Tree.
+	
+	/* Methods */
 	
 	public NumericFeature(NumericFeature f, Double threshold)
 	{
@@ -20,7 +23,6 @@ class NumericFeature extends Feature
 	public NumericFeature(String name, int index)
 	{
 		super(name, index, TYPE_NUMERIC);
-		
 	}
 
 	public Double getThreshold()

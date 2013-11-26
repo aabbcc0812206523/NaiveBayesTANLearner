@@ -3,11 +3,12 @@
  * Class to represent a single generalized feature.
  *
  * @author Prakhar Panwaria
- * @date 10/05/2013
- * @hw 1
+ * @date 11/22/2013
+ * @hw 3
  */
 class Feature 
 {
+	/* Member Variables */
 	  private String name;  
 	  private int mType;
 	  private int mIndex;
@@ -15,6 +16,8 @@ class Feature
 	  public static final int TYPE_NUMERIC = 1;
 	  public static final int TYPE_DISCRETE = 2;
 	  public static final int TYPE_INVALID = -1;
+	  
+	  /* Methods */
 	  
 	  public Feature (String name, int index, int type)
 	  {
