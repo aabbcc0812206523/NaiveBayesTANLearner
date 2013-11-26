@@ -1,0 +1,113 @@
+sex class
+cp class
+fbs class
+restecg class
+exang class
+slope class
+thal class
+
+negative negative 0.9964581576271801
+negative negative 0.9168972380007939
+negative negative 0.7921334225458560
+negative negative 0.8490123837855467
+negative negative 0.9363834733062383
+positive negative 0.6499090550406828
+negative negative 0.9885698030758844
+negative negative 0.9950875408206689
+negative negative 0.8197623160387076
+positive negative 0.7217212303693453
+negative negative 0.9964581576271801
+positive negative 0.7822667435539218
+negative negative 0.7937979964494157
+negative negative 0.7723024262988078
+negative negative 0.9360853614948982
+negative negative 0.9893253256652258
+negative negative 0.9950875408206689
+negative negative 0.9964581576271801
+negative negative 0.8811394325989786
+negative negative 0.9950875408206689
+negative negative 0.9366893161339651
+negative negative 0.9531429010040846
+negative negative 0.9950875408206689
+negative negative 0.9782192761290638
+negative negative 0.9885698030758844
+negative negative 0.9885698030758844
+negative negative 0.9964581576271801
+negative negative 0.9601827861330140
+negative negative 0.9960431399105271
+negative negative 0.9800696001325968
+positive negative 0.9695270501414735
+positive negative 0.9865930181340249
+negative negative 0.9893253256652258
+negative negative 0.5420040577803335
+negative negative 0.9700030770057559
+negative negative 0.9601827861330140
+negative negative 0.9461979573646638
+negative negative 0.9753517836954573
+negative negative 0.9700030770057559
+negative negative 0.9957863636582125
+negative negative 0.9841949810140499
+negative negative 0.9841949810140499
+positive negative 0.6369228805588607
+negative negative 0.7937979964494157
+positive negative 0.7217212303693453
+negative negative 0.9366893161339651
+negative negative 0.9700030770057559
+negative negative 0.7937979964494157
+negative negative 0.9841949810140499
+negative negative 0.9885698030758844
+negative negative 0.5008111708460708
+negative negative 0.7419616657788326
+negative negative 0.9607282909291352
+negative negative 0.9964581576271801
+negative negative 0.9885698030758844
+negative negative 0.9841949810140499
+negative negative 0.9841949810140499
+positive positive 0.9938209276505980
+positive positive 0.6217583396122161
+positive positive 0.8824770988710444
+positive positive 0.9479273853832133
+negative positive 0.8811394325989786
+positive positive 0.9865930181340249
+positive positive 0.6217583396122161
+positive positive 0.9211797057005526
+positive positive 0.6510443705542999
+positive positive 0.7513980013427098
+negative positive 0.9660913943837304
+positive positive 0.9211797057005526
+positive positive 0.9864945814657656
+positive positive 0.8022705718176706
+negative positive 0.9206196083493523
+negative positive 0.5420040577803335
+positive positive 0.6499090550406828
+positive positive 0.9211797057005526
+positive positive 0.6499090550406828
+positive positive 0.9208163726875266
+negative positive 0.8627234044041412
+negative positive 0.9937873576704828
+positive positive 0.9211797057005526
+positive positive 0.9695270501414735
+positive positive 0.8114246757306252
+negative positive 0.6749231835296518
+positive positive 0.6499090550406828
+positive positive 0.9625124192094377
+positive positive 0.9865930181340249
+negative positive 0.9864221840636626
+negative positive 0.9753517836954573
+positive positive 0.9865930181340249
+positive positive 0.9765232159570346
+positive positive 0.6499090550406828
+positive positive 0.8391616873534221
+positive positive 0.9450613411555488
+positive positive 0.7516004367690532
+positive positive 0.9472465716155853
+positive positive 0.9625124192094377
+positive positive 0.6217583396122161
+positive positive 0.8984026784423423
+positive positive 0.9576665640586815
+positive positive 0.5426731100552838
+positive positive 0.9034541526712239
+positive positive 0.9865930181340249
+negative positive 0.9535936628734795
+
+86
